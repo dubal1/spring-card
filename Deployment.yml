@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: card
+  labels:
+    app: card
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: card
+  template:
+    metadata:
+      labels:
+        app: card
+    spec:
+      containers:
+        - name: card
+          image: acrjlgc17.azurecr.io/card
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      imagePullSecrets:
+        - name: regcred
+---
+#############################
+#############################
+kind: Service
+apiVersion: v1
+metadata:
+  name: card
+spec:
+  selector:
+    app: card
+  ports:
+    - port: 9003
+      targetPort: 9003
+  type: LoadBalancer
